@@ -1,10 +1,9 @@
 const bcrypt = require("bcrypt-nodejs");
 
-module.exports = (app) => {
-  const { existsOrError, notExistsOrError, equalsOrError } =
-    app.api.validation;
+module.exports = app => {
+  const { existsOrError, notExistsOrError, equalsOrError } = app.api.validation;
 
-  const encryptPassword = (password) => {
+  const encryptPassword = password => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
   };
@@ -13,19 +12,15 @@ module.exports = (app) => {
     const user = { ...req.body };
     if (req.params.id) user.id = req.params.id;
 
+    if (!req.originalUrl.startsWith("/users")) user.admin = false;
+    if (!req.user || !req.user.admin) user.admin = false;
+
     try {
       existsOrError(user.name, "Nome não informado");
       existsOrError(user.email, "E-mail não informado");
       existsOrError(user.password, "Senha não informado");
-      existsOrError(
-        user.confirmPassword,
-        "Confirmação de Senha inválida"
-      );
-      equalsOrError(
-        user.password,
-        user.confirmPassword,
-        "Senhas não conferem"
-      );
+      existsOrError(user.confirmPassword, "Confirmação de Senha inválida");
+      equalsOrError(user.password, user.confirmPassword, "Senhas não conferem");
 
       const userFromDB = await app
         .db("users")
@@ -33,10 +28,7 @@ module.exports = (app) => {
         .first();
 
       if (!user.id) {
-        notExistsOrError(
-          userFromDB,
-          "Usuário já cadastrado"
-        );
+        notExistsOrError(userFromDB, "Usuário já cadastrado");
       }
     } catch (msg) {
       return res.status(400).send(msg);
@@ -50,14 +42,14 @@ module.exports = (app) => {
         .db("users")
         .update(user)
         .where({ id: user.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+        .then(_ => res.status(204).send())
+        .catch(err => res.status(500).send(err));
     } else {
       app
         .db("users")
         .insert(user)
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+        .then(_ => res.status(204).send())
+        .catch(err => res.status(500).send(err));
     }
   };
 
@@ -65,8 +57,9 @@ module.exports = (app) => {
     app
       .db("users")
       .select("id", "name", "email", "admin")
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).send(err));
+      .whereNull("deletedAt")
+      .then(users => res.json(users))
+      .catch(err => res.status(500).send(err));
   };
 
   const getById = (req, res) => {
@@ -76,8 +69,8 @@ module.exports = (app) => {
       .where({ id: req.params.id })
       .whereNull("deletedAt")
       .first()
-      .then((user) => res.json(user))
-      .catch((err) => res.status(500).send(err));
+      .then(user => res.json(user))
+      .catch(err => res.status(500).send(err));
   };
 
   const remove = async (req, res) => {
@@ -91,10 +84,7 @@ module.exports = (app) => {
         .db("users")
         .update({ deletedAt: new Date() })
         .where({ id: req.params.id });
-      existsOrError(
-        rowsUpdated,
-        "Usuário não foi encontrado."
-      );
+      existsOrError(rowsUpdated, "Usuário não foi encontrado.");
 
       res.status(204).send();
     } catch (msg) {
