@@ -1,3 +1,7 @@
 {
-  "prettier.printWidth": 80
+  "prettier.printWidth": 80,
+  // Evita parênteses em arrow functions de único argumento
+  "prettier.arrowParens": "avoid",
+  // Ativa formatação automática ao salvar
+  "editor.formatOnSave": true
 }
