@@ -5,6 +5,7 @@ module.exports = app => {
 
   const save = (req, res) => {
     const article = { ...req.body };
+    console.log(article);
     if (req.params.id) article.id = req.params.id;
 
     try {
