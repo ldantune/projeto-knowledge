@@ -13,7 +13,7 @@ import store from "./config/store";
 import router from "./config/router";
 
 const token =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6Ikx1Y2FzIEQgQW50dW5lcyIsImVtYWlsIjoibGRhbnR1bmVAZ21haWwuY29tIiwiYWRtaW4iOnRydWUsImlhdCI6MTczMzQxNjU0MCwiZXhwIjoxNzMzNjc1NzQwfQ.qJ8YnlLdJm1lxSOdRPIUfvfMuTfAP72_dPpMOcEsmpM";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6Ikx1Y2FzIEQgQW50dW5lcyIsImVtYWlsIjoibGRhbnR1bmVAZ21haWwuY29tIiwiYWRtaW4iOnRydWUsImlhdCI6MTczMzQxODMyOSwiZXhwIjoxNzMzNjc3NTI5fQ.lTtp8nmVPwpu6wsnQvggPxjl0AZTTgyr2CzHxHXnNcU";
 
 // Configura o header global de autenticação somente se o token existir
 if (token) {

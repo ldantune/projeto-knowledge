@@ -2,7 +2,12 @@ module.exports = app => {
   const { existsOrError, notExistsOrError } = app.api.validation;
 
   const save = (req, res) => {
-    const category = { ...req.body };
+    const category = {
+      id: req.body.id,
+      name: req.body.name,
+      parentId: req.body.parentId,
+    };
+    console.log(category);
     if (req.params.id) category.id = req.params.id;
 
     try {
